@@ -48,5 +48,33 @@ class Solution {
         if (nums[right] == target) return right;
         if (nums[left] == target) return left;
         return -1;
+    }
+    
+    /** 08-16-20 **/
+    public List<List<Integer>> subsets(int[] nums) {
+        if (nums.length == 0) return new ArrayList<>();
+
+        List<Integer> path = new ArrayList<>();
+        List<List<Integer>> result = new ArrayList<>();
+        
+        subsets(nums, 0, path, result);
+        
+        return result;
+    }
+    
+    private void subsets(int[] nums, 
+                         int index, 
+                         List<Integer> path,
+                         List<List<Integer>> result) {
+        if (index == nums.length) {
+            result.add(new ArrayList<>(path));
+            return;
+        }
+        
+        subsets(nums, index + 1, path, result);
+        
+        path.add(nums[index]);
+        subsets(nums, index + 1, path, result);
+        path.remove(path.size() - 1);
     }    
 }

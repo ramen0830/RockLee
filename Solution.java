@@ -1,4 +1,71 @@
 class Solution {    
+    /** 09-05-20 **/
+    public int shortestDistance(int[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0].length == 0) {
+            return 0;
+        }
+        
+        int m = grid.length, n = grid[0].length;
+        int[][] totalDistance = new int[m][n];
+        int[][] canReach = new int[m][n]; //canReach[i][j] = k;
+        int count = 0;
+        
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j] == 1) {
+                    bfs(grid, i, j, canReach, totalDistance);
+                    count ++;
+                }
+            }
+        }
+        
+        // count : the number of building
+        
+        int res = Integer.MAX_VALUE;
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if(grid[i][j] == 0 && canReach[i][j] == count) {
+                    res = Math.min(res, totalDistance[i][j]);
+                }
+            }
+        }
+        return res == Integer.MAX_VALUE ? -1 : res;
+    }
+    
+    private void bfs(int[][] grid, int x, int y, int[][] canReach, int[][] totalDistance) {
+        int res = Integer.MAX_VALUE, m = grid.length, n = grid[0].length;;
+        
+        Queue<Integer> queue = new LinkedList<>();
+        queue.offer(x * n + y);
+        boolean[][] visited = new boolean[m][n];
+        visited[x][y] = true;
+        
+        int curDis = 0;
+        int[] dirs = {-1, 0, 1, 0, -1};
+        
+        while (!queue.isEmpty()) {
+            int l = queue.size();
+            curDis++;
+            while (l-- != 0) {
+                int t = queue.poll();
+                x = t / n;
+                y = t % n;
+                
+                canReach[x][y] ++;
+                
+                for (int i = 0; i < 4; ++i) {
+                    int _x = x + dirs[i], _y = y + dirs[i + 1];
+                    if (_x >= 0 && _x < m && _y >= 0 && _y < n && grid[_x][_y] == 0 && !visited[_x][_y]) {
+                        queue.offer(_x * n + _y);
+                        visited[_x][_y] = true;
+                        totalDistance[_x][_y] += curDis;
+                        
+                    }
+                }
+            }
+        }
+    }
+    
     /** 08-29-20 **/
     int[][] delta = new int[][] {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1},{-1, -1}, {-1, 1}, {1, -1}}; 
     public int shortestPathBinaryMatrix(int[][] grid) {

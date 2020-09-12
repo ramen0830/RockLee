@@ -1,5 +1,54 @@
+class Point {
+    int i, j;
+    Point (int row, int col) {
+        i = row; j = col;
+    }
+}
+
 class Solution {    
     /** 09-05-20 **/
+    public void solve(char[][] board) {
+        if (board.length == 0 || board[0].length == 0) return;
+        int m = board.length, n = board[0].length;
+        
+        Queue<Point> queue = new LinkedList<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if ((i == 0 || i == m - 1 || j == 0 || j == n -1) && board[i][j] == 'O') {
+                    board[i][j] = 'V';
+                    queue.offer(new Point(i, j));
+                } 
+            }
+        }
+    
+        bfs(board, queue);
+    
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 'V') board[i][j] = 'O';
+                else board[i][j] = 'X';
+            }
+        }
+    }
+    
+    int[][] delta = new int[][] {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    
+    void bfs(char[][] board, Queue<Point> queue) {
+        while (queue.size() > 0) {
+            int size = queue.size();
+            for (int count = 0; count < size; count++) {
+                Point cur = queue.poll();
+                for (int d = 0; d < 4; d++) {
+                    int ni = cur.i + delta[d][0], nj = cur.j + delta[d][1];
+                    if (ni < 0 || ni >= board.length || nj < 0 || nj >= board[0].length) continue;
+                    if (board[ni][nj] != 'O') continue;
+                    board[ni][nj] = 'V';
+                    queue.offer(new Point(ni, nj));
+                }
+            }
+        }
+    }
+
     public int shortestDistance(int[][] grid) {
         if (grid == null || grid.length == 0 || grid[0].length == 0) {
             return 0;

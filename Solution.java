@@ -6,10 +6,45 @@ class Point {
 }
 
 class Solution {    
-    /** 09-19-20 **/
-
+    /** 09-19-20 **/    
     /** 09-12-20 **/
-
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] indegree = new int[numCourses];// indegree[label] = count;
+        List<List<Integer>> nexts = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            nexts.add(new ArrayList<>());
+        }
+        //nexts.get(label) --> List of label's neighbors
+        for (int[] edge : prerequisites) {
+            int from = edge[1], to = edge[0];
+            nexts.get(from).add(to);
+            indegree[to]++;
+        }
+        // finish graph construct directed graph
+        
+        Queue<Integer> queue = new LinkedList<>();
+        
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) queue.offer(i);
+        }
+        
+        int[] ans = new int[numCourses];
+        int index = 0;
+        
+        while (queue.size() > 0) {
+            int cur = queue.poll();
+            ans[index++] = cur;
+            for (int next : nexts.get(cur)) {
+                indegree[next]--;
+                if (indegree[next] == 0) {
+                    queue.offer(next);
+                }
+            }
+        }
+        
+        return index == numCourses ? ans : new int[0]; // check cycle
+    }
+    
     /** 09-05-20 **/
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
         Set<String> dict = new HashSet<>(wordList);

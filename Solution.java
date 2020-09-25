@@ -6,8 +6,50 @@ class Point {
 }
 
 class Solution {    
-    /** 09-19-20 **/    
+    /** 09-25-20 **/
+
     /** 09-12-20 **/
+	// There are N courses, labelled from 1 to N.
+    public int minimumSemesters(int N, int[][] relations) {
+        
+        HashMap<Integer, List<Integer>> nexts = new HashMap<>();
+        int[] indegree = new int[N + 1];
+        
+        for(int[] relation: relations) {
+            if(!nexts.containsKey(relation[0])) {
+                nexts.put(relation[0], new ArrayList<>());
+            }
+            nexts.get(relation[0]).add(relation[1]);
+            indegree[relation[1]] ++;
+        }
+        
+        Queue<Integer> queue = new LinkedList<>();
+        for(int node = 1; node <= N; node ++) {
+            if(indegree[node] == 0) queue.offer(node);
+        }
+        
+        // a d
+        
+        int semester = 0;
+        int finished = 0;
+        while(queue.size() > 0) {
+            int size = queue.size();
+            for(int i = 0; i < size; i ++) {
+                int cur = queue.poll();
+                finished ++;
+                for(int next: nexts.getOrDefault(cur, new ArrayList<>())) {
+                    indegree[next] --;
+                    if(indegree[next] == 0) {
+                        queue.offer(next);
+                    }
+                }
+            }
+            semester ++;
+        }
+        if(finished != N) return -1;
+        return semester;
+    }
+
     public List<List<Integer>> permute(int[] nums) {
         boolean[] used = new boolean[nums.length];
         List<List<Integer>> result = new ArrayList<>();

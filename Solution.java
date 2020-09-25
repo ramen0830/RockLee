@@ -9,7 +9,8 @@ class Solution {
     /** 09-25-20 **/
 
     /** 09-12-20 **/
-	// There are N courses, labelled from 1 to N.
+	
+    // There are N courses, labelled from 1 to N.
     public int minimumSemesters(int N, int[][] relations) {
         
         HashMap<Integer, List<Integer>> nexts = new HashMap<>();

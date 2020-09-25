@@ -8,6 +8,28 @@ class Point {
 class Solution {    
     /** 09-19-20 **/    
     /** 09-12-20 **/
+    public List<List<Integer>> permute(int[] nums) {
+        boolean[] used = new boolean[nums.length];
+        List<List<Integer>> result = new ArrayList<>();
+        dfs(nums, used, new ArrayList<>(), result);
+        return result;
+    }
+    
+    void dfs(int[] nums, boolean[] used, List<Integer> path, List<List<Integer>> result) {
+        if (path.size() == nums.length) {
+            result.add(new ArrayList<>(path));
+        }
+        
+        for (int i = 0; i < nums.length; i++) {
+            if (used[i]) continue;
+            path.add(nums[i]);
+            used[i] = true;
+            dfs(nums, used, path, result);
+            path.remove(path.size() - 1);
+            used[i] = false;
+        }
+    }
+    
     public int[] findOrder(int numCourses, int[][] prerequisites) {
         int[] indegree = new int[numCourses];// indegree[label] = count;
         List<List<Integer>> nexts = new ArrayList<>();

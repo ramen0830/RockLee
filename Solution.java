@@ -8,8 +8,44 @@ class Point {
 class Solution {    
     /** 09-25-20 **/
 
+
     /** 09-12-20 **/
-	
+    public List<String> letterCombinations(String digits) {
+        List<String> result = new ArrayList<>();
+        
+        if (digits == null || digits.isEmpty()) {
+            return result;
+        }
+        
+        Map<Character, char[]> map = new HashMap<>();
+        map.put('2', new char[] { 'a', 'b', 'c' });
+        map.put('3', new char[] { 'd', 'e', 'f' });
+        map.put('4', new char[] { 'g', 'h', 'i' });
+        map.put('5', new char[] { 'j', 'k', 'l' });
+        map.put('6', new char[] { 'm', 'n', 'o' });
+        map.put('7', new char[] { 'p', 'q', 'r', 's' });
+        map.put('8', new char[] { 't', 'u', 'v'});
+        map.put('9', new char[] { 'w', 'x', 'y', 'z' });
+        
+        dfs(map, digits, 0, new StringBuilder(), result);
+        
+        return result;
+    }
+
+    private void dfs(Map<Character, char[]> map, String digits, int index, StringBuilder sb, List<String> result) {
+        if (index == digits.length()) {
+            result.add(sb.toString());
+            return;
+        }
+        
+        char[] str = map.get(digits.charAt(index));
+        for (char c : str) {
+            sb.append(c);
+            dfs(map, digits, index + 1, sb, result);
+            sb.setLength(sb.length() - 1);
+        }
+    }
+
     // There are N courses, labelled from 1 to N.
     public int minimumSemesters(int N, int[][] relations) {
         

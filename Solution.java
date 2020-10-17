@@ -7,13 +7,36 @@ class Point {
 
 class Solution {
     /** 10-10-20 **/
-    
+    // 
     
     // 425. Word Squares
+    public List<List<String>> wordSquares(String[] words) {
+        List<List<String>> ans = new ArrayList<>();
+        List<String> path = new ArrayList<>();
+        dfs(words, 0, words[0].length(), path, ans);
+        return ans;
+    }
     
+    void dfs(String[] words, int row, int target, List<String> path, List<List<String>> ans) {
+        if (row == target) {
+            ans.add(new ArrayList<>(path));
+            return;
+        }
+        
+        for (int i = 0; i < words.length; i++) {
+            if (!check(path, row, words[i])) continue;
+            path.add(words[i]);
+            dfs(words, row + 1, target, path, ans);
+            path.remove(path.size() - 1);
+        }
+    }
     
-    
-    
+    boolean check(List<String> path, int row, String word) {
+        for (int i = 0; i < path.size(); i++) {
+            if (path.get(i).charAt(row) != word.charAt(i)) return false;
+        }
+        return true;
+    }    
     
     // 51. N-Queens
     public List<List<String>> solveNQueens(int n) {

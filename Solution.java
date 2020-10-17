@@ -8,7 +8,45 @@ class Point {
 class Solution {
     /** 10-10-20 **/
     // 236. Lowest Common Ancestor of a Binary Tree
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        return helper(root, p, q).target;
+    }
     
+    private Result helper(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return new Result(null, false, false);
+        }
+        
+        Result left = helper(root.left, p, q);
+        Result right = helper(root.right, p, q);
+        
+        if (left.target != null) {
+            return left;
+        }
+        
+        if (right.target != null) {
+            return right;
+        }
+        
+        boolean foundP = (root == p || left.foundP || right.foundP);
+        boolean foundQ = (root == q || left.foundQ || right.foundQ);
+        
+        if (foundP && foundQ) {
+            return new Result(root, true, true);
+        }
+        return new Result(null, foundP, foundQ);
+    }
+    
+    class Result {
+        public TreeNode target;
+        public boolean foundP;
+        public boolean foundQ;
+        public Result(TreeNode target, boolean foundP, boolean foundQ) {
+            this.target = target;
+            this.foundP = foundP;
+            this.foundQ = foundQ;
+        }
+    }
     
     // 425. Word Squares
     public List<List<String>> wordSquares(String[] words) {

@@ -7,7 +7,70 @@ class Point {
 
 class Solution {
     /** 10-10-20 **/
-
+    
+    
+    
+    
+    
+    
+    
+    
+    // 51. N-Queens
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> res = new ArrayList<>();
+        dfs(n, new ArrayList<Integer>(), res);
+        return res;
+    }
+    
+    void dfs(int n, List<Integer> position, List<List<String>> result) {
+        if (position.size() == n) {
+            result.add(build(position));
+            return;
+        }
+        for (int col = 0; col < n; col++) {
+            if (check(position, col)) {
+                position.add(col);
+                dfs(n, position, result);
+                position.remove(position.size() - 1);
+            }
+        }
+    }
+    
+    List<String> build(List<Integer> position) {
+        int n = position.size();
+        List<String> board = new ArrayList<>();
+        for (int row = 0; row < n; row++) {
+            String line = "";
+            for (int col = 0; col < n; col++) {
+                if (position.get(row) == col) {
+                    line += "Q";
+                } else {
+                    line += ".";
+                }
+            }
+            board.add(line);
+        }
+        return board;
+    }
+    
+    boolean check(List<Integer> path, int col) {
+        int row = path.size();
+        
+        for (int i = 0; i < path.size(); i++) {
+            if (path.get(i) == col) return false;
+        }
+        
+        for (int i = 0; i < path.size(); i++) {
+            if (i - path.get(i) == row - col) return false;
+        }
+        
+        for (int i = 0; i < path.size(); i++) {
+            if (i + path.get(i) == row + col) return false;
+        }
+        
+        return true;
+    }
+    
     /** 10-03-20 **/
     public TreeNode lcaDeepestLeaves(TreeNode root) {
         return helper(root).target;

@@ -6,8 +6,55 @@ class Point {
 }
 
 class Solution {
+    /** 10-24-20 **/
+
     /** 10-17-20 **/
 
+    // Leetcode 1120. Maximum Average Subtree
+    public TreeNode findSubtree2(TreeNode root) {
+        return helper(root).maxAvgSubTree;
+    }
+    
+    private Result helper(TreeNode node) {
+        if (node == null) {
+            return new Result(0, 0, 0, null);
+        }
+        
+        Result left = helper(node.left);
+        Result right = helper(node.right);
+        
+        int sum = left.sum + right.sum + node.val;
+        int size = left.size + right.size + 1;
+        double currAvg = (double) sum / size;
+     
+        Result result = new Result(sum, size, currAvg, node);
+        
+        if (left.maxAvgSubTree != null && result.maxAvg <= left.maxAvg) {
+            result.maxAvg = left.maxAvg;
+            result.maxAvgSubTree = left.maxAvgSubTree;
+        }
+        
+        if (right.maxAvgSubTree != null && result.maxAvg <= right.maxAvg) {
+            result.maxAvg = right.maxAvg;
+            result.maxAvgSubTree = right.maxAvgSubTree;
+        }
+        
+        return result;
+    }
+    
+    class Result {
+        int sum; 
+        int size;
+        double maxAvg;
+        TreeNode maxAvgSubTree;
+        
+        Result(int sum, int size, double maxAvg, TreeNode maxAvgSubTree) {
+            this.sum = sum;
+            this.size = size;
+            this.maxAvg = maxAvg;
+            this.maxAvgSubTree = maxAvgSubTree;
+        }
+    }    
     
     /** 10-10-20 **/
     

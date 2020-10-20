@@ -10,7 +10,7 @@ class Solution {
 
     /** 10-17-20 **/
 
-    // Leetcode 1120. Maximum Average Subtree
+    // 1120. Maximum Average Subtree
     public TreeNode findSubtree2(TreeNode root) {
         return helper(root).maxAvgSubTree;
     }

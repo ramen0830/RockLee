@@ -11,7 +11,64 @@ class Solution {
     /** 10-17-20 **/
 
     // 425. WordSquares
+    class Node {
+        public Map<Character, Node> children = new HashMap<>();
+        public String word = "";
+        public List<Integer> words = new ArrayList<>();
+    }
     
+    class Trie {
+        public Node root = new Node();
+        public void add(String word, int id) {
+            Node cur = root;
+            root.words.add(id);
+            for (int i = 0; i < word.length(); i++) {
+                if (!cur.children.containsKey(word.charAt(i))) {
+                    cur.children.put(word.charAt(i), new Node());
+                }
+                cur = cur.children.get(word.charAt(i));
+                cur.words.add(id);
+            }
+            cur.word = word;
+        }
+    }
+    
+    Trie trie = new Trie();
+    
+    public List<List<String>> wordSquares(String[] words) {
+        List<List<String>> ans = new ArrayList<>();
+        if (words == null || words.length == 0) {
+            return ans;
+        }
+        
+        for (int i = 0; i < words.length; i++) {
+            trie.add(words[i], i);
+        }
+        List<String> path = new ArrayList<>();
+        dfs(words, 0, words[0].length(), path, ans);
+        return ans;
+    }
+    
+    private void dfs(String[] words, int row, int target, List<String> path, List<List<String>> ans) {
+        if (row == target) {
+            ans.add(new ArrayList<>(path));
+            return;
+        }
+        
+        Node cur = trie.root;
+        for (int i = 0; i < path.size(); i++) {
+            if (!cur.children.containsKey(path.get(i).charAt(row))) {
+                return;
+            }
+            cur  = cur.children.get(path.get(i).charAt(row));
+        }
+        for (Integer index : cur.words) {
+            path.add(words[index]);
+            dfs(words, row + 1, target, path, ans);
+            path.remove(path.size() - 1);
+        }
+    }
+
     // 1120. Maximum Average Subtree
     public TreeNode findSubtree2(TreeNode root) {
         return helper(root).maxAvgSubTree;

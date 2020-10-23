@@ -10,7 +10,7 @@ class Solution {
 
     /** 10-17-20 **/
 
-    // 425. WordSquares
+    // 425. Word Squares
     class Node {
         public Map<Character, Node> children = new HashMap<>();
         public String word = "";

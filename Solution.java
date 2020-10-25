@@ -6,12 +6,86 @@ class Point {
 }
 
 class Solution {
-    /** 10-24-20 **/
+    /** 10-31-20 **/
 
     /** 10-17-20 **/
 
-    // 79. Word Search
+    // 212. Word Search II
+    class TrieNode {
+        String word = "";
+        Map<Character, TrieNode> children = new HashMap<>();
+    }
     
+    class Trie {
+        TrieNode root = null;
+        Trie() {
+            root = new TrieNode();
+        }
+        void add(String word) {
+            TrieNode cur = root;
+            for (int i = 0; i < word.length(); i++) {
+                if (!cur.children.containsKey(word.charAt(i))) {
+                    cur.children.put(word.charAt(i), new TrieNode());
+                }
+                cur = cur.children.get(word.charAt(i));
+            }
+            cur.word = word;
+        }
+        int isPrefix(String word) {
+            TrieNode cur = root;
+            for (int i = 0; i < word.length(); i++) {
+                if (!cur.children.containsKey(word.charAt(i)))  {
+                    return 0;
+                }
+                cur = cur.children.get(word.charAt(i));
+            }
+            if(cur.word.equals("")) return 1; // 仅仅是一个前缀
+            return 2; // 是一个单词
+        }
+    }
+    
+    Trie trie = null;
+    int[][] delta = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    
+    public List<String> findWords(char[][] board, String[] words) {
+        trie = new Trie();
+        Set<String> visited = new HashSet<>();
+        for (String word : words) {
+            trie.add(word);
+        }
+        
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                dfs(board, i, j, "", visited);
+            }
+        }
+        
+        List<String> ans = new ArrayList<>();
+        for (String word: visited) {
+            ans.add(word);
+        }
+        return ans;
+    }
+    
+    private void dfs(char[][] board, int i, int j, String path, Set<String> visited) {
+        int flag = trie.isPrefix(path);
+        if (flag == 0) {
+            return;
+        }
+        if (flag == 2) {
+            visited.add(path);
+        }
+        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length) {
+            return;
+        }
+        char original = board[i][j];
+        board[i][j] = '#';
+        for (int d = 0; d < delta.length; d++) {
+            int ni = i + delta[d][0], nj = j + delta[d][1];
+            dfs(board, ni, nj, path + original, visited);
+        }        
+        board[i][j] = original;        
+    }    
     
     // 425. Word Squares
     class Node {

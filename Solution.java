@@ -10,6 +10,32 @@ class Solution {
     
     /** 10-31-20 **/
 
+    
+    // 3. Longest Substring Without Repeating Characters
+    public int lengthOfLongestSubstring(String s) {
+        HashMap<Character, Integer> count = new HashMap<>();
+        
+        int ans = 0, left = 0, right = 0;
+        
+        while (right < s.length()) {
+            // [left, right)
+            char cur = s.charAt(right);
+            count.put(cur, count.getOrDefault(cur, 0) + 1);
+            // [left, right]
+            while (count.get(cur) > 1) { // while invalid
+                char pre = s.charAt(left);
+                count.put(pre, count.get(pre) - 1);
+                left++;
+            }
+            // [left, right] valid
+            ans = Math.max(ans, right - left + 1);
+            right++;
+            // [left, right)
+        }
+        
+        return ans;
+    }    
+
     /** 10-17-20 **/
 
     // 212. Word Search II

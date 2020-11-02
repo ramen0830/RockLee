@@ -13,8 +13,70 @@ class Solution {
     
     
     // 212. Word Search II
+    class TrieNode {
+        String word = "";
+        Map<Character, TrieNode> children = new HashMap<>();
+    }
+
+    class Trie {
+        TrieNode root = new TrieNode();
+        void add(String word) {
+            TrieNode cur = root;
+            for (int i = 0; i < word.length(); i++) {
+                if (!cur.children.containsKey(word.charAt(i))) {
+                    cur.children.put(word.charAt(i), new TrieNode());
+                }
+                cur = cur.children.get(word.charAt(i));
+            }
+            cur.word = word;
+        }
+    }
     
+    Trie trie = null;
+    int[][] delta = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     
+    public List<String> wordSearchII(char[][] board, List<String> words) {
+        trie = new Trie();
+        Set<String> visited = new HashSet<>();
+        for (String word : words) {
+            trie.add(word);
+        }
+        
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                dfs(board, i, j, trie.root, visited);
+            }
+        }
+        
+        List<String> ans = new ArrayList<>();
+        for (String word: visited) {
+            ans.add(word);
+        }
+        return ans;
+    }
+    
+    private void dfs(char[][] board, int i, int j, TrieNode node, Set<String> visited) {
+        if (!node.word.equals("")) {
+            visited.add(node.word);
+        }
+        
+        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length) {
+            return;
+        }
+        
+        if (!node.children.containsKey(board[i][j])) {
+            return;
+        }
+        
+        char original = board[i][j];
+        board[i][j] = '#';
+        for (int d = 0; d < delta.length; d++) {
+            int ni = i + delta[d][0], nj = j + delta[d][1];
+            dfs(board, ni, nj, node.children.get(original), visited);
+        }
+        board[i][j] = original;
+    }
+
     // 3. Longest Substring Without Repeating Characters
     public int lengthOfLongestSubstring(String s) {
         HashMap<Character, Integer> count = new HashMap<>();

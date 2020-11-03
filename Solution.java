@@ -11,6 +11,55 @@ class Solution {
     /** 10-31-20 **/
     
     // 756. Pyramid Transition Matrix
+    public boolean pyramidTransition(String bottom, List<String> allowed) {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String s : allowed) {
+            if (!map.containsKey(s.substring(0, 2))) {
+                map.put(s.substring(0, 2), new ArrayList<>());
+            }
+            map.get(s.substring(0, 2)).add(s.substring(2, 3));
+        }
+        
+        return dfs(bottom, map);
+    }
+    
+    boolean dfs(String bottom, Map<String, List<String>> map) {
+        if (bottom.length() == 1) return true;
+        
+        List<String> nextBottoms = getNextBottoms(bottom, map);
+        for (String nextBottom : nextBottoms) {
+            if (dfs(nextBottom, map)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    List<String> getNextBottoms(String bottom, 
+                                Map<String, List<String>> map) {
+        List<String> nextBottoms = new ArrayList<>();
+        for (int i = 0; i < bottom.length() - 1; i++) {
+            if (!map.containsKey(bottom.substring(i, i + 2))) {
+                return nextBottoms;
+            }
+        }
+        helper(bottom, 0, "", nextBottoms, map);
+        return nextBottoms;
+    }
+    
+    void helper(String bottom, int index, String path,
+                List<String> nextBottoms, 
+                Map<String, List<String>> map) {
+        if (path.length() == bottom.length() - 1) {
+            nextBottoms.add(path);
+            return;
+        }
+        
+        for (String ch : map.get(bottom.substring(index, index + 2))) {
+            helper(bottom, index + 1, path + ch, nextBottoms, map);            
+        }
+    }
 
     // 212. Word Search II
     class TrieNode {

@@ -6,8 +6,19 @@ class Point {
 }
 
 class Solution {
-    /** 11-07-20 **/
+    /** 11-14-20 **/
     
+    // 509. Fibonacci Number
+    HashMap<Integer, Integer> memo = new HashMap<>();
+    
+    public int fib(int N) {
+        if (N == 0 || N == 1) return N;
+        if (memo.containsKey(N)) return memo.get(N);
+        int ans = fib(N - 1) + fib(N - 2);
+        memo.put(N, ans);
+        return ans;
+    }
+
     /** 10-31-20 **/
     
     // 756. Pyramid Transition Matrix

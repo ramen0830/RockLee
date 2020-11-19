@@ -9,8 +9,35 @@ class Solution {
     /** 11-14-20 **/
     
     // 139. Word Break
+    HashMap<Integer, Boolean> memo = new HashMap<>();    
     
-    
+    public boolean wordBreak(String s, List<String> wordDict) {
+        HashSet<String> dict = new HashSet<>(wordDict);
+        return dfs(s, 0, dict);
+    }
+
+    boolean dfs(String s, int index, HashSet<String> dict) {
+        if (index == s.length()) {
+            return true;
+        } 
+        if (memo.containsKey(index)) {
+            return memo.get(index);
+        }
+        boolean ans = false;
+        for (int cut = index; cut < s.length() && !ans; cut++) {
+            // s[index, index + 1, ... cut]
+            String word = s.substring(index, cut + 1);
+            if (dict.contains(word)) {
+                // substring s[cut + 1:]
+                if (dfs(s, cut + 1, dict)) {
+                    ans = true;
+                }
+            }        
+        }
+        memo.put(index, ans);
+        return ans;
+    }
+
     // 509. Fibonacci Number
     HashMap<Integer, Integer> memo = new HashMap<>();
     

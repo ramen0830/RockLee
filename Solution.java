@@ -6,11 +6,52 @@ class Point {
 }
 
 class Solution {
+    /** 11-21-20 **/
+    
     /** 11-14-20 **/
     
-    // 53. Maximum Subarray
-
+    // 给定整数数组（可能有复数），找最长的sum为target的subarray
+    // prefix sum
+    public int longestSubarray(int[] nums, int target) {
+        HashMap<Integer, Integer> prefixSum2Index = new HashMap<>();
+        prefixSum2Index.put(0, -1);
+        int prefixSum = 0;
+        int ans = -1;
+        for (int i = 0; i < nums.length; i++) {
+            prefixSum += nums[i];
+            // search (prefixSum  - target) in map
+            if (prefixSum2Index.containsKey(prefixSum - target)) {
+                int index = prefixSum2Index.get(prefixSum - target);
+                ans = Math.max(ans, i - index);
+            }
+            if (!prefixSum2Index.containsKey(prefixSum)) {
+                prefixSum2Index.put(prefixSum, i);
+            }
+        }
+        return ans;        
+    }
     
+    // 给定整数数组（数字都是正数），找最长的sum为target的subarray
+    public int longestSubarray2(int[] nums, int target) {
+        int left = 0, right = 0, windowSum = 0;
+        int longestLen = 0;
+        while (right < nums.length) {
+            // [left, right)
+            windowSum += nums[right];
+            // [left, right]
+            while (windowSum > target) { // while invalid
+                windowSum -= nums[left++];
+            }
+            if (windowSum == target) {
+                longestLen = Math.max(longestLen, right - left + 1);
+            }
+            // [left, right]
+            right++;
+            // [left, right)
+        }
+        return longestLen;
+    }
+
     // 209. Minimum Size Subarray Sum
     // Given an array of n positive integers and a positive integer s
     // find the minimal length of a contiguous subarray of which the sum ≥ s

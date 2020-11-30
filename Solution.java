@@ -9,7 +9,36 @@ class Solution {
     /** 11-21-20 **/
 
     // 139. Word Break
+    HashMap<Integer, Boolean> memo = new HashMap<>();
     
+    public boolean wordBreak(String s, List<String> wordDict) {
+        HashSet<String> dict = new HashSet<>(wordDict);
+        return dfs(s, 0, dict);        
+    }
+    
+    // subtring s[index:] 可不可以break
+    // return value true or false
+    boolean dfs(String s, int index, HashSet<String> dict) {
+        if (memo.containsKey(index)) return memo.get(index);
+        
+        boolean ans = false;
+        // 最小子问题
+        if (index == s.length()) {
+            return true;
+        }
+        // for loop all sub problem
+        for (int cut = index; cut < s.length() && !ans; cut++) {
+            // s[index, cut]
+            String word = s.substring(index, cut + 1);
+            if (dict.contains(word)) {
+                if (dfs(s, cut + 1, dict)) {
+                    ans = true;
+                }
+            }
+        }
+        memo.put(index, ans);
+        return ans;
+    }    
     
     /** 11-14-20 **/
     

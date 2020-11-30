@@ -9,7 +9,49 @@ class Solution {
     /** 11-21-20 **/
 
     // 72. Edit Distance
+    public int minDistance(String word1, String word2) {
+        return dfs(word1, 0, word2, 0);
+    }
     
+    HashMap<Integer, HashMap<Integer, Integer>> memo = new HashMap<>();
+    
+    // change s1[i1:] to s2[i2:]
+    int dfs(String s1, int i1, String s2, int i2) {
+        if (i1 == s1.length()) {
+            return s2.length() - i2;
+        }
+        if (i2 == s2.length()) {
+            return s1.length() - i1;
+        }
+        // get memo
+        if (memo.containsKey(i1) && memo.get(i1).containsKey(i2)) {
+            return memo.get(i1).get(i2);
+        }
+        int ans = Integer.MAX_VALUE; 
+        if (s1.charAt(i1) == s2.charAt(i2)) {
+            ans = dfs(s1, i1 + 1, s2, i2 + 1);
+        } else {
+            // a.... b....
+            // replace
+            ans = Math.min(ans, 1 + dfs(s1, i1 + 1, s2, i2 + 1));
+            // delete
+            ans = Math.min(ans, 1 + dfs(s1, i1 + 1, s2, i2));
+            // insert
+            ans = Math.min(ans, 1 + dfs(s1, i1, s2, i2 + 1));            
+        }
+        if (!memo.containsKey(i1)) {
+            memo.put(i1, new HashMap<>());
+        }
+        memo.get(i1).put(i2, ans);
+        return ans;
+    }
+    // 去求 word1[index1:] 和 word2[index2:] 的编辑距离
+    // 如果word1[index1] == word2[index2]
+    //      再去计算word1[index1 + 1:] 和 word2[index2 + 1:] 的编辑距离
+    // 否则
+    //      将word1[index1]替换为word2[index2] 再去计算word1[index1 + 1:] 和 word2[index2 + 1:] 的编辑距离
+    //      将word1[index1]删除 再去计算word1[index1 + 1:] 和 word2[index2:] 的编辑距离
+    //      在word1[index1]前插入word2[index2] 再去计算word1[index1:] 和 word2[index2 + 1:] 的编辑距离 
     
     // 91. Decode Ways
     Map<Integer, Integer> memo = new HashMap<>();

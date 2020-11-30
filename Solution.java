@@ -9,7 +9,35 @@ class Solution {
     /** 11-21-20 **/
 
     // 91. Decode Ways
+    Map<Integer, Integer> memo = new HashMap<>();
     
+    public int numDecodings(String s) {
+        return dfs(s, 0);        
+    }
+    
+    // substring s[index:] how many decode ways
+    int dfs(String s, int index) {
+        if (index == s.length()) {
+            return 1;
+        }
+        // get memo
+        if (memo.containsKey(index)) {
+            return memo.get(index);
+        }
+        if (s.charAt(index) == '0') {
+            return 0;
+        }
+        int ans = dfs(s, index + 1);
+        if (index + 1 < s.length() && 
+           (s.charAt(index) == '1' ||
+            s.charAt(index) == '2' && s.charAt(index + 1) <= '6')) {
+            ans += dfs(s, index + 2);
+        }
+        // set memo
+        memo.put(index, ans);
+        //System.out.println(memo);
+        return ans;
+    }    
     
     // 139. Word Break
     HashMap<Integer, Boolean> memo = new HashMap<>();
